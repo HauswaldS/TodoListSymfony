@@ -1,0 +1,13 @@
+{% extends 'TLDashboardBundle:Folder:index.html.twig'%}
+{% block folder %}
+<h2>Add task to {{ folderTitle }}</h2>
+{{ form_start(taskForm) }}
+{{ form_errors(taskForm) }}
+{{ form_row(taskForm.content) }}
+{{ form_row(taskForm.priority) }}
+{{
+    form_widget(taskForm.save, { 'attr' : { 'class' : 'btn btn-success'}} )
+}}
+{{ form_rest(taskForm) }}
+{{ form_end(taskForm)}}
+{% endblock %}

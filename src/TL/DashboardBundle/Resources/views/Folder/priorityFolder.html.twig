@@ -1,0 +1,70 @@
+{% extends 'TLDashboardBundle::layout.html.twig' %}
+{% block folder %}
+{% if user is not null %}
+<ul class="nav nav-pills">
+    <li><a href="#folders" data-toggle="pill">By Folder</a></li>
+</ul>   
+<div class="tab-content">   
+    <div class="tab-pane fade in active" id="folders">
+        <ul class="nav nav-pills">
+            {% for folder in user.folders %}
+            <li><a data-toggle="pill" class="active" href="#{{ folder.id }}">{{ folder.title }} <span class="badge">{% if folder.tasks %}{{ folder.tasks|length }}{% endif %}</span></a></li>
+            {% endfor %}
+        </ul>
+         <div class="tab-content">
+  {% for folder in user.folders %}
+    <div id="{{ folder.id }}" class="tab-pane fade in active">
+      <div class="pull-right">
+        <a type="button" class="btn btn-primary" href="{{ path('tl_dashboard_folder_edit', {'folderId': folder.id })}}">    
+          <span class="glyphicon glyphicon-edit"></span>
+        </a>
+        <a type="button" class="btn btn-danger" href="{{ path('tl_dashboard_folder_delete', {'folderId': folder.id })}}">    
+          <span class="glyphicon glyphicon-trash"></span>
+        </a>             
+      </div>      
+      <h3>
+        {{ folder.title }} 
+        <a type="button" class="btn btn-success" href="{{ path('tl_dashboard_task_add', {'folderId': folder.id })}}">    
+          <span class="glyphicon glyphicon-plus"></span>
+        </a>        
+      </h3>
+      <div class="well">
+        {{ folder.description }}
+      </div>
+      <ul class="list-group">
+        {% for task in folder.tasks %}
+          {% if task.status == false %}
+        <li class="list-group-item">
+          <a class="pull-right" href="{{path('tl_dashboard_task_delete', {'taskId': task.id})}}" style="font-size:20px; color:red;">
+            <span class="glyphicon glyphicon-remove-circle"></span>
+          </a>
+          <a class="pull-right" href="{{ path('tl_dashboard_task_set_done', {'taskId': task.id})}}" style="font-size:20px; color:green; padding-right:10px;">
+            <span class="glyphicon glyphicon-ok-sign"></span>
+          </a>
+          <p class=" list-group-item-danger" style="max-width:90%;">
+            {{ task.content }}
+          <p>
+          <p class="pull-right">
+            <span style="color:red;"class="glyphicon glyphicon-exclamation-sign"></span>
+            {% endif %} Created the {{ task.createdAt|date('y/m/Y') }}
+          </p>
+        <div>
+        <a href="{{ path('tl_dashboard_task_set_priority', {'taskId': task.id }) }}">
+          <span class="glyphicon glyphicon-pushpin" style="font-size:20px; color:red;"></span>
+        </a>     
+        </div>
+        </li>
+          {% else %}
+          <li class="list-group-item">No task yet in this folder</li>
+          {% endfor %}
+      </ul>    
+    </div>
+    {% endfor %}
+    </div>
+</div>
+{% else %}
+<div class="alert alert-info">
+  <p>None of your folder contains a prioritary task, set one task to priority to see it appear here </p>
+</div>
+{% endif %}  
+{% endblock %}

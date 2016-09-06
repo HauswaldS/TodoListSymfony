@@ -1,0 +1,39 @@
+tl_dashboard_homepage:
+    path:     /
+    defaults: { _controller: TLDashboardBundle:Folder:index }
+
+tl_dashboard_folder_add:
+    path: /folder/add
+    defaults: { _controller: TLDashboardBundle:Folder:addFolder }
+
+tl_dashboard_folder_edit:
+    path: /folder/edit/{folderId}
+    defaults: { _controller: TLDashboardBundle:Folder:editFolder }
+
+tl_dashboard_folder_delete:
+    path: /folder/delete/{folderId}
+    defaults: { _controller: TLDashboardBundle:Folder:deleteFolder }
+
+tl_dashboard_task_add:
+    path: /folder/{folderId}/task/add
+    defaults: { _controller: TLDashboardBundle:Folder:addTask }
+
+tl_dashboard_task_delete:
+    path: /folder/task/delete/{taskId}
+    defaults: { _controller: TLDashboardBundle:Folder:deleteTask }
+
+tl_dashboard_task_set_done:
+    path: /folder/task/done/{taskId}
+    defaults: { _controller : TLDashboardBundle:Folder:setTaskDone }
+
+tl_dashboard_task_set_priority:
+    path: /folder/task/priority/{taskId}
+    defaults: { _controller: TLDashboardBundle:Folder:setTaskPriority }
+
+tl_dashboard_priority_folder:
+    path: /priority
+    defaults: { _controller: TLDashboardBundle:Folder:priorityFolder }
+
+tl_dashboard_done_folder:
+    path: /done
+    defaults: { _controller: TLDashboardBundle:Folder:doneFolder }

@@ -1,0 +1,13 @@
+{% extends 'TLDashboardBundle::layout.html.twig' %}
+{% block folder %}
+
+{{ form_start(folderForm) }}
+{{ form_errors(folderForm) }}
+{{ form_row(folderForm.title) }}
+{{ form_row(folderForm.description) }}
+{{
+    form_widget(folderForm.save, { 'attr': { 'class':'btn bt-primary' }} )
+}}
+{{ form_rest(folderForm) }}
+{{ form_end(folderForm) }}
+{% endblock %}

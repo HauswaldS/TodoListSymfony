@@ -1,0 +1,44 @@
+{% extends "TLCoreBundle::layout.html.twig" %}
+{% block title %}Dashboard - {{ parent() }}{% endblock %}
+{% block content %}
+<div class="row">   
+    <div class="col-xs-4">
+    <div class="card">
+        {% if app.user.profileImage != null%}
+        <img class="card-img-top" src="{{ vich_uploader_asset(app.user.profileImage, 'imageFile') }}" alt="Card image cap" style="max-width:50%;">        
+        {% endif %}     
+        <div class="card-block">
+             <h4 class="card-title">{{ app.user.username }}</h4>
+                <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                <a href="{{path('fos_user_profile_edit')}}" class="btn btn-primary" style="display:block; max-width:50%;">
+                    <span class="glyphicon glyphicon-pencil pull-left"></span> Edit my profile
+                </a>
+                <a href="{{path('tl_dashboard_done_folder')}}" class="btn btn-success"  style="display:block; max-width:50%;">
+                    <span class="glyphicon glyphicon-check pull-left"></span> My Done Folder
+                </a>
+                <a href="{{path('tl_dashboard_priority_folder')}}" class="btn btn-danger" style="display:block; max-width:50%;">
+                    <span class="glyphicon glyphicon-calendar pull-left"></span> Prioritary tasks
+                </a>
+            </div>
+        </div>
+    </div>
+    <div class="col-xs-8">
+    {% for flashMessage in app.session.flashbag.get('info')%}
+        <div class="alert alert-info">
+            {{ flashMessage }}
+        </div>
+    {% endfor %}
+    {% for flashMessage in app.session.flashbag.get('delete')%}
+        <div class="alert alert-warning">
+            {{ flashMessage }}
+        </div>
+    {% endfor %}
+    {% for flashMessage in app.session.flashbag.get('success')%}
+        <div class="alert alert-success">
+            {{ flashMessage }}
+        </div>
+    {% endfor %}    
+    {% block folder %} {% endblock %}
+    </div>
+</div>
+{% endblock %}
