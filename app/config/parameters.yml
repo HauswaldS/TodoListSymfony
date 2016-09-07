@@ -7,6 +7,6 @@ parameters:
     database_password: null
     mailer_transport: gmail
     mailer_host: 127.0.0.1
-    mailer_user: lbaxel95@gmail.com
-    mailer_password: mariokart445
+    mailer_user: test
+    mailer_password: nope
     secret: db9201b8f0d48d5c90c2cffd95b36bded20ac268

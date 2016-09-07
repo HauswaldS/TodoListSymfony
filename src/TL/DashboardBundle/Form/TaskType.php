@@ -29,13 +29,5 @@ class TaskType extends AbstractType
             ->add('save', SubmitType::class);
      }
 
-     /**
-      * @param OptionsResolver $resolver
-      */
-      public function configureOptions(OptionsResolver $resolver)
-      {
-          $resolver->setDefaults(array(
-              'data_class' => "TL\DashboardBundle\Entity\Task"
-          ));
-      }
+
 }

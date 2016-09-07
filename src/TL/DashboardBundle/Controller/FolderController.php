@@ -5,12 +5,22 @@ namespace TL\DashboardBundle\Controller;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use TL\UserBundle\Entity\User;
 use TL\DashboardBundle\Entity\Folder;
 use TL\DashboardBundle\Entity\Task;
 use TL\DashboardBundle\Form\FolderType;
 use TL\DashboardBundle\Form\TaskType;
+
+//API stuff
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+
+//Serializer magic motherfucker
+use Symfony\Component\Serializer\Serializer;
+use Symfony\Component\Serializer\Encoder\JsonEncoder;
+use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
 
 
 class FolderController extends Controller
@@ -154,11 +164,17 @@ class FolderController extends Controller
         $task = $em->getRepository('TLDashboardBundle:Task')->find($taskId);
 
         $task->setStatus(true);
+
         $task->getFolder()->increaseNbTaskDone();
+
         $task->getFolder()->decreaseNbTaskPending();
+
         $task->setFinishedAt(new \DateTime('now'));
+
         if($task->getPriority() === true){
+
             $task->setPriority(false);
+
             $task->getFolder()->decreaseNbTaskPrioritary();
         }
         
@@ -177,12 +193,17 @@ class FolderController extends Controller
         $task = $em->getRepository('TLDashboardBundle:Task')->find($taskId);
 
         if($task->getPriority() === true){
+
             $task->setPriority(false);
+
             $task->getFolder()->decreaseNbTaskPrioritary();
+
             $request->getSession()->getFlashBag()->add('info', 'Your task isn\'t a priority anymore.');
         } else {
             $task->setPriority(true);
+
             $task->getFolder()->increaseNbTaskPrioritary();
+
             $request->getSession()->getFlashBag()->add('info', 'Your task has now become a priority, now get to work dude !');
         }
 
@@ -213,5 +234,53 @@ class FolderController extends Controller
         return $this->render('TLDashboardBundle:Folder:doneFolder.html.twig', array(
             'user' => $user
         ));
+    }
+
+    /**
+     * @Route("/{userId}/folders", name="tl_dashboard_user_folders")
+     * @Method("Get")
+     */
+    public function getUserFoldersAction($userId)
+    {
+          $user = $this->getDoctrine()->getManager()->getRepository('TLUserBundle:User')->UserFoldersWithTasks($userId);
+       
+        foreach($user->getFolders() as $folder){
+
+            foreach($folder->getTasks() as $task){
+
+                if($task->getFinishedAt() !== null){
+
+                    $endDate = $task->getFinishedAt();
+
+                    $daysLeft = $endDate->diff(new \Datetime())->days;
+
+                    $task->setDaysLeftToFinish($daysLeft);
+
+                } else {
+
+                    $task->setDaysLeftToFinish(null);
+                }
+            }
+        }
+
+        $encoder = new JsonEncoder();
+
+        $normalizer = new ObjectNormalizer();
+
+        $normalizer->setCircularReferenceHandler(function ($object){
+             return $object;
+        });
+
+        $serializer = new Serializer(array($normalizer), array($encoder));
+
+        $taskJsonData = $serializer->serialize($user, 'json');
+
+        $response =  new Response();
+
+        $response->setContent($taskJsonData);
+
+        $response->headers->set('Content-Type', 'application/json');
+
+        return $response;
     }
 }

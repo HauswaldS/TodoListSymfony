@@ -19,7 +19,7 @@ class Mailer
 
     public function sendContactMessage($contact)
     {
-        $template = 'TLCoreBundle:Contact:contact.html.twig';
+        $template = 'TLCoreBundle:Contact:contactTemplate.html.twig';
 
         $from = $contact['email'];
 
@@ -43,7 +43,7 @@ class Mailer
             ->setTo($to)
             ->setSubject($subject)
             ->setBody($body)
-            ->setContactType('text/html');
+            ->SetContentType('text/html');
 
             $this->mailer->send($mail);
     }

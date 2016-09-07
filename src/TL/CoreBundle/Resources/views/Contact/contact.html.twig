@@ -1,5 +1,6 @@
 {% extends 'TLCoreBundle::layout.html.twig' %}
 {% block content %}
+{% if contactForm %}
     {{ form_start(contactForm) }}
     {{ form_row(contactForm.name) }}
     {{ form_row(contactForm.surname) }}
@@ -7,4 +8,5 @@
     {{ form_row(contactForm.send) }}
     {{ form_rest(contactForm) }}
     {{ form_end(contactForm) }}
+{% endif %}
 {% endblock%}

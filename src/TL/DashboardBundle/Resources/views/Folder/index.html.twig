@@ -1,5 +1,9 @@
 {% extends 'TLDashboardBundle::layout.html.twig' %}
 {% block folder %}
+<div id="js-folder-wrapper">
+
+</div>
+
   <ul class="nav nav-pills">
     {% for folder in user.folders %}
     <li><a data-toggle="pill" class="active" href="#{{ folder.id }}">{{ folder.title }} <span class="badge">{% if folder.tasks %}{{ folder.nbTaskPending }}{% endif %}</span></a></li>
@@ -69,4 +73,18 @@
     </div>
     {% endfor %}
 </div>
+{% endblock %}
+
+{% block javascript %}
+ {{ parent() }}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react/0.14.3/react.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react/0.14.3/react-dom.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-core/5.8.23/browser.min.js"></script>
+    <script type="text/babel" src="{{ asset('bundles/tlcore/js/user.react.js') }}"></script>
+    <script type="text/babel">
+      ReactDOM.render(
+        <FolderSection />
+        document.getElementById('js-folder-wrapper')
+      );
+    </script>
 {% endblock %}

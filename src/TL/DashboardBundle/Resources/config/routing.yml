@@ -1,5 +1,5 @@
 tl_dashboard_homepage:
-    path:     /
+    path:     /{userId}
     defaults: { _controller: TLDashboardBundle:Folder:index }
 
 tl_dashboard_folder_add:
@@ -37,3 +37,7 @@ tl_dashboard_priority_folder:
 tl_dashboard_done_folder:
     path: /done
     defaults: { _controller: TLDashboardBundle:Folder:doneFolder }
+
+t_dashboard_user_folders:
+    resource: "@TLDashboardBundle/Controller"
+    type: annotation
