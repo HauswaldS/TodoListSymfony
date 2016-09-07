@@ -8,6 +8,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
+use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
 
 class TaskType extends AbstractType
 {
@@ -20,6 +21,11 @@ class TaskType extends AbstractType
          $builder
             ->add('content', TextareaType::class)
             ->add('priority', CheckboxType::class, array('required' => false))
+            ->add('finishedAt', DateTimeType::class, array(
+                'required' => false,
+                'placeholder'  => array(
+                'year' => 'Year', 'month' => 'Month', 'day' => 'Day',
+                'hour' => 'Hour', 'min' => 'Minutes')))
             ->add('save', SubmitType::class);
      }
 

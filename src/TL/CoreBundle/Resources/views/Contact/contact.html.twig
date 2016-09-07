@@ -1,0 +1,10 @@
+{% extends 'TLCoreBundle::layout.html.twig' %}
+{% block content %}
+    {{ form_start(contactForm) }}
+    {{ form_row(contactForm.name) }}
+    {{ form_row(contactForm.surname) }}
+    {{ form_row(contactForm.email) }}
+    {{ form_row(contactForm.send) }}
+    {{ form_rest(contactForm) }}
+    {{ form_end(contactForm) }}
+{% endblock%}

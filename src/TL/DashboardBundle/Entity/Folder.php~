@@ -45,9 +45,19 @@ class Folder
      private $user;
 
      /**
-      * @ORM\OneToMany(targetEntity="TL\DashboardBundle\Entity\Folder", mappedBy="folder")
+      * @ORM\OneToMany(targetEntity="TL\DashboardBundle\Entity\Task", mappedBy="folder", cascade={"persist", "remove"})
       */
      private $tasks;
+
+     /**
+      * @ORM\Column(name="nb_task_done", type="integer")
+      */
+     private $nbTaskDone;
+
+     /**
+      * @ORM\Column(name="nb_task_prioritary", type="integer")
+      */
+     private $nbTaskPrioritary;
 
     /**
      * Get id
@@ -130,5 +140,50 @@ class Folder
     public function getUser()
     {
         return $this->user;
+    }
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        $this->tasks = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->nbTaskDone = 0;
+        $this->nbTaskPrioritary = 0;
+    }
+
+    /**
+     * Add task
+     *
+     * @param \TL\DashboardBundle\Entity\Folder $task
+     *
+     * @return Folder
+     */
+    public function addTask(\TL\DashboardBundle\Entity\Task $task)
+    {
+        $this->tasks[] = $task;
+
+        $task->setFolder($this);
+
+        return $this;
+    }
+
+    /**
+     * Remove task
+     *
+     * @param \TL\DashboardBundle\Entity\Folder $task
+     */
+    public function removeTask(\TL\DashboardBundle\Entity\Task $task)
+    {
+        $this->tasks->removeElement($task);
+    }
+
+    /**
+     * Get tasks
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getTasks()
+    {
+        return $this->tasks;
     }
 }

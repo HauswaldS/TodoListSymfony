@@ -5,6 +5,7 @@
 {{ form_errors(taskForm) }}
 {{ form_row(taskForm.content) }}
 {{ form_row(taskForm.priority) }}
+{{ form_row(taskForm.finishedAt) }}
 {{
     form_widget(taskForm.save, { 'attr' : { 'class' : 'btn btn-success'}} )
 }}

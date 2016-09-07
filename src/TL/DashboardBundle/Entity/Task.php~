@@ -4,7 +4,6 @@ namespace TL\DashboardBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
-use Symfony\Component\Validator\Context\ExecutionContextInterface;
 /**
  * Task
  *
@@ -28,7 +27,7 @@ class Task
      *
      * @ORM\Column(name="status", type="boolean")
      */
-    private $status = false;
+    private $status;
 
     /**
      * @var string
@@ -59,7 +58,7 @@ class Task
      * @ORM\Column(name="finished_at", type="datetime", nullable=true)
      * @Assert\DateTime()
      */
-    private $finishedAt = null;
+    private $finishedAt;
 
     /**
      * @var TL\DashboardBundle\Entity\Folder
@@ -69,12 +68,11 @@ class Task
      */
      private $folder;
 
-     private $daysLeftToFinish;
-
     public function __construct()
     {
         $this->createdAt = new \Datetime('now');
-        $this->daysLeftToFinish = null;
+        $this->finishedAt = null;
+        $this->status = false;
     }
 
     /**
@@ -207,39 +205,35 @@ class Task
         return $this->folder;
     }
 
-
     /**
-     * Set finishedAt
+     * Set endDate
      *
-     * @param \DateTime $finishedAt
+     * @param \DateTime $endDate
      *
      * @return Task
      */
-    public function setFinishedAt($finishedAt)
+    public function setEndDate($endDate)
     {
-        $this->finishedAt = $finishedAt;
+        $this->endDate = $endDate;
 
         return $this;
     }
 
     /**
-     * Get finishedAt
+     * Get endDate
      *
      * @return \DateTime
      */
-    public function getFinishedAt()
+    public function getEndDate()
     {
-        return $this->finishedAt;
+        return $this->endDate;
     }
 
     /**
-     * When the Task is created
-     *
-     * @ORM\PrePersist
+     *@ORM\PrePersist
      */
     public function prePersist()
     {
-        //If the task Priority is true
         if($this->getPriority() === true)
         {
             $this->folder->increaseNbTaskPrioritary();
@@ -248,49 +242,15 @@ class Task
     }
 
      /**
-      * Before removing a Task
-      *
       * @ORM\PreRemove
       */
      public function preRemove()
      {
-         //If the task Priority is true when removed
          if($this->getPriority() === true){
-
-             //Decrease the number of prioritary Task of the Folder
             $this->getFolder()->decreaseNbTaskPrioritary();
-
-             //Decrease the number of pending Task of the Folder
             $this->folder->decreaseNbTaskPending();
-            
-            //If the Task is set as Done
          } else if ($this->getStatus() === true){
-             //Decrease the number of done Task of the Folder
              $this->getFolder()->decreaseNbTaskDone();
-         }
-     }
-
-
-     public function setDaysLeftToFinish($daysLeft)
-     {
-         $this->DaysLeftToFinish = $daysLeft;
-     }
-
-     public function getDaysLeftToFinish()
-     {
-         return $this->DaysLeftToFinish;
-     }
-
-     /**
-      * @Assert\Callback
-      */
-     public function isFinishedAtValid(ExecutionContextInterface $context)
-     {
-         if( new\DateTime('now') > $this->getFinishedAt()){
-             $context
-                    ->buildViolation('Your date isn\'t valid, you cannot set a task for yesterday ! Sorry.')
-                    ->atPath('finishedAt')
-                    ->addViolation();
          }
      }
 }

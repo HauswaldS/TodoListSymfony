@@ -49,6 +49,21 @@ class Folder
       */
      private $tasks;
 
+     /**
+      * @ORM\Column(name="nb_task_pending", type="integer")
+      */
+     private $nbTaskPending = 0;
+
+     /**
+      * @ORM\Column(name="nb_task_done", type="integer")
+      */
+     private $nbTaskDone = 0;
+
+     /**
+      * @ORM\Column(name="nb_task_prioritary", type="integer")
+      */
+     private $nbTaskPrioritary = 0;
+
     /**
      * Get id
      *
@@ -173,5 +188,107 @@ class Folder
     public function getTasks()
     {
         return $this->tasks;
+    }
+
+    /**
+     * Set nbTaskPending
+     *
+     * @param integer $nbTaskPending
+     *
+     * @return Folder
+     */
+    public function setNbTaskPending($nbTaskPending)
+    {
+        $this->nbTaskPending = $nbTaskPending;
+
+        return $this;
+    }
+
+    /**
+     * Get nbTaskPending
+     *
+     * @return integer
+     */
+    public function getNbTaskPending()
+    {
+        return $this->nbTaskPending;
+    }
+
+    /**
+     * Set nbTaskDone
+     *
+     * @param integer $nbTaskDone
+     *
+     * @return Folder
+     */
+    public function setNbTaskDone($nbTaskDone)
+    {
+        $this->nbTaskDone = $nbTaskDone;
+
+        return $this;
+    }
+
+    /**
+     * Get nbTaskDone
+     *
+     * @return integer
+     */
+    public function getNbTaskDone()
+    {
+        return $this->nbTaskDone;
+    }
+
+    /**
+     * Set nbTaskPrioritary
+     *
+     * @param integer $nbTaskPrioritary
+     *
+     * @return Folder
+     */
+    public function setNbTaskPrioritary($nbTaskPrioritary)
+    {
+        $this->nbTaskPrioritary = $nbTaskPrioritary;
+
+        return $this;
+    }
+
+    /**
+     * Get nbTaskPrioritary
+     *
+     * @return integer
+     */
+    public function getNbTaskPrioritary()
+    {
+        return $this->nbTaskPrioritary;
+    }
+
+    public function increaseNbTaskPending()
+    {
+        $this->nbTaskPending++;
+    }
+
+    public function decreaseNbTaskPending()
+    {
+        $this->nbTaskPending--;
+    }
+
+    public function increaseNbTaskDone()
+    {
+        $this->nbTaskDone++;
+    }
+
+    public function decreaseNbTaskDone()
+    {
+        $this->nbTaskDone--;
+    }
+
+    public function increaseNbTaskPrioritary()
+    {
+        $this->nbTaskPrioritary++;
+    }
+
+    public function decreaseNbTaskPrioritary()
+    {
+        $this->nbTaskPrioritary--;
     }
 }

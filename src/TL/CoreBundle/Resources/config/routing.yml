@@ -1,3 +1,7 @@
 tl_core_homepage:
-    path:     /
+    path:  /
     defaults: { _controller: TLCoreBundle:Home:index }
+
+tl_core_contact:
+    path: /contact
+    defaults: { _controller: TLCoreBundle:Home:contact}

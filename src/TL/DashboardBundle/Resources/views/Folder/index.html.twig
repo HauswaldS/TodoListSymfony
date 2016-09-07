@@ -2,7 +2,7 @@
 {% block folder %}
   <ul class="nav nav-pills">
     {% for folder in user.folders %}
-    <li><a data-toggle="pill" class="active" href="#{{ folder.id }}">{{ folder.title }} <span class="badge">{% if folder.tasks %}{{ folder.tasks|length }}{% endif %}</span></a></li>
+    <li><a data-toggle="pill" class="active" href="#{{ folder.id }}">{{ folder.title }} <span class="badge">{% if folder.tasks %}{{ folder.nbTaskPending }}{% endif %}</span></a></li>
     {% endfor %}
     <li><a  href="{{ path('tl_dashboard_folder_add')}}"style="cursor:pointer;">Add a folder <span class="badge">+</span></a></li>
   </ul>
@@ -52,6 +52,12 @@
         <a href="{{ path('tl_dashboard_task_set_priority', {'taskId': task.id }) }}">
           <span class="glyphicon glyphicon-pushpin" style="font-size:20px;"></span>
         </a>        
+        {% endif %}
+        {% if task.daysLeftToFinish %}
+        <p style="display:inline-block; padding-left:5px;">
+          {{ task.daysLeftToFinish }} days left to finish
+          <span class="glyphicon glyphicon-chrono"></span>
+        </p>
         {% endif %}
         </div>
         </li>

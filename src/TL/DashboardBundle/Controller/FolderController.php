@@ -17,8 +17,21 @@ class FolderController extends Controller
 {
     public function indexAction()
     {   
+        //Get the User object $user with all it's folders and associated tasks
         $user = $this->getDoctrine()->getManager()->getRepository('TLUserBundle:User')->UserFoldersWithTasks($this->getUser()->getId());
        
+        foreach($user->getFolders() as $folder){
+            foreach($folder->getTasks() as $task){
+                if($task->getFinishedAt() !== null){
+                    $endDate = $task->getFinishedAt();
+                    $daysLeft = $endDate->diff(new \Datetime())->days;
+                    $task->setDaysLeftToFinish($daysLeft);
+                } else {
+                    $task->setDaysLeftToFinish(null);
+                }
+            }
+        }
+
         return $this->render('TLDashboardBundle:Folder:index.html.twig', array(
             'user'   => $user
         ));
@@ -141,7 +154,14 @@ class FolderController extends Controller
         $task = $em->getRepository('TLDashboardBundle:Task')->find($taskId);
 
         $task->setStatus(true);
-
+        $task->getFolder()->increaseNbTaskDone();
+        $task->getFolder()->decreaseNbTaskPending();
+        $task->setFinishedAt(new \DateTime('now'));
+        if($task->getPriority() === true){
+            $task->setPriority(false);
+            $task->getFolder()->decreaseNbTaskPrioritary();
+        }
+        
         $em->persist($task);
         $em->flush();
 
@@ -158,10 +178,11 @@ class FolderController extends Controller
 
         if($task->getPriority() === true){
             $task->setPriority(false);
+            $task->getFolder()->decreaseNbTaskPrioritary();
             $request->getSession()->getFlashBag()->add('info', 'Your task isn\'t a priority anymore.');
-        } 
-        else if($task->getPriority() === false) {
+        } else {
             $task->setPriority(true);
+            $task->getFolder()->increaseNbTaskPrioritary();
             $request->getSession()->getFlashBag()->add('info', 'Your task has now become a priority, now get to work dude !');
         }
 
